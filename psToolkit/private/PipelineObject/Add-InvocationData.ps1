@@ -14,9 +14,9 @@ Function Add-InvocationData {
         try {
 
           # If the 'Invocation' key does not exist, create it and it's ID sub-key.
-            if ( -not $PipelineObject.ContainsKey('Invocation') ) {
-                $PipelineObject.Add('Invocation',@{})
-                $PipelineObject.Invocation.Add('ID',$null)
+            if ( -not $PipelineObject.ContainsKey('_Invocation') ) {
+                $PipelineObject.Add('_Invocation',@{})
+                $PipelineObject._Invocation.Add('ID',$null)
             }
 
           # Get the callstack for the entrypoint, the entrypoint caller and the caller's predecessor.
@@ -69,12 +69,12 @@ Function Add-InvocationData {
             }
 
           # Add the invocation object to the PipelineObject's Invocation collection.
-            $PipelineObject.Invocation.Add($Invocation.ID,$Invocation)
+            $PipelineObject._Invocation.Add($Invocation.ID,$Invocation)
 
           # Set the PipelineObject's Invocation ID to the current Invocation ID. This is used by the remaining
           # pipeline functions to add their data and it allows the user to referece the Invocation object in code
           # for error reporting or debugging.
-            $PipelineObject.Invocation.ID = $Invocation.ID
+            $PipelineObject._Invocation.ID = $Invocation.ID
 
           # Write the updated object to the pipeline.
             Write-Output $PipelineObject

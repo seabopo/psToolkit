@@ -13,7 +13,7 @@ Function Add-BoundParameterValues {
 
         try {
 
-            $i = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
+            $i = $PipelineObject._Invocation[$PipelineObject._Invocation.ID]
 
             $i.BoundParameters.GetEnumerator() |
                 ForEach-Object {

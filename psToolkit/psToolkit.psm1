@@ -21,7 +21,7 @@
     $env:PS_STATUSMESSAGE_INDENTATION_STRING  = '...'
     $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH = 100
     $env:PS_STATUSMESSAGE_COLOR_DEBUG_OBJECTS = $false
-    $env:PS_STATUSMESSAGE_IGNORE_PARAMS_JSON  = '["Invocation"]'
+    $env:PS_STATUSMESSAGE_IGNORE_PARAMS_JSON  = '["_Invocation"]'
 
 #==================================================================================================================
 # LOAD FUNCTIONS AND EXPORT PUBLIC FUNCTIONS AND ALIASES

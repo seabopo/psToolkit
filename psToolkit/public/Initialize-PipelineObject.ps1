@@ -127,7 +127,7 @@ Function Initialize-PipelineObject {
 
             Write-Output $PipelineObject
 
-            if ( $ReturnInvocationID ) { Write-Output $PipelineObject.Invocation.ID }
+            if ( $ReturnInvocationID ) { Write-Output $PipelineObject._Invocation.ID }
 
         }
         catch {

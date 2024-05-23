@@ -12,7 +12,7 @@ Function Add-DefinedParameterKeys {
 
         try {
 
-            $i = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
+            $i = $PipelineObject._Invocation[$PipelineObject._Invocation.ID]
 
             if ( $i.DefinedParameters ) {
                 $i.DefinedParameters.GetEnumerator() |

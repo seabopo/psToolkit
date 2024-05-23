@@ -60,9 +60,9 @@
                 }
                 $PO,$ID = $invocationData | Initialize-PipelineObject -l -r -t @{ AllAreNull = @('StringParam','IntParam') }
 
-                Write-Host ( 'Invocation ID: {0}' -f $PO.Invocation.ID ) -ForegroundColor Green
+                Write-Host ( 'Invocation ID: {0}' -f $ID ) -ForegroundColor Green
 
-                if ( $PO.Invocation[$ID].ParameterTests.Successful ) {
+                if ( $PO._Invocation[$ID].ParameterTests.Successful ) {
                     $PO | Test-PipelineObjectStep2 | Out-Null
                     $PO | Test-PipelineObjectStep3 -test $PO | Out-Null
                 }

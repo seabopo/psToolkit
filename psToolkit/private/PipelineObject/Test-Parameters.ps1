@@ -18,7 +18,7 @@ Function Test-Parameters {
 
         try {
 
-            $i = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
+            $i = $PipelineObject._Invocation[$PipelineObject._Invocation.ID]
 
             if ( $i.CallStack[0].InvocationInfo.BoundParameters.ContainsKey('Tests') ) {
 

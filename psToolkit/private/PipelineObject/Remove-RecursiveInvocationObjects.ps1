@@ -12,7 +12,7 @@ Function Remove-RecursiveInvocationObjects {
 
         try {
 
-            $i = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
+            $i = $PipelineObject._Invocation[$PipelineObject._Invocation.ID]
 
           # Lots of Recursion
             $i.Remove('CallStack')

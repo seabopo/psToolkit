@@ -15,14 +15,14 @@ Function Remove-RecursiveObjectKey {
 
         try {
 
-            $i = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
+            $i = $PipelineObject._Invocation[$PipelineObject._Invocation.ID]
 
             $i.DefinedParameters |
                 Where-Object { $_.Extent.ToString() -like '*ValueFromPipeline*Hashtable*' } |
                 ForEach-Object {
                     $key = $_.Name.VariablePath.UserPath.ToString()
                     if ( $i.BoundParameters.ContainsKey($key) ) {
-                        if ( $i.BoundParameters[$key].ContainsKey('Invocation') ) {
+                        if ( $i.BoundParameters[$key].ContainsKey('_Invocation') ) {
                             $i.PipelineObjectParameterName = $key
                             $PipelineObject.Remove($key)
                         }

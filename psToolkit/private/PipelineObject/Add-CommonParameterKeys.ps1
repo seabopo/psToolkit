@@ -14,7 +14,7 @@ Function Add-CommonParameterKeys {
 
         try {
 
-            $i = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
+            $i = $PipelineObject._Invocation[$PipelineObject._Invocation.ID]
 
             if ( $i.IncludeCommonParameters ) {
                 $functionDefinition = Get-Command $i.Command
