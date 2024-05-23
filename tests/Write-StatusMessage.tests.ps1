@@ -17,60 +17,63 @@
 
     Import-Module $("../{0}" -f (Get-Item $PSScriptRoot).Parent.Name) -Force
 
+    $env:PS_STATUSMESSAGE_LABELS     = $false
+    $env:PS_STATUSMESSAGE_TIMESTAMPS = $false
+
 
 #==================================================================================================================
 # Run Status Message Tests
 #==================================================================================================================
 
-    Write-StatusMessage -Type 'Header' -Message " Status Message Examples" -DoubleBanner -DoubleSpace
+    Write-StatusMessage -Type 'Header' -Message " Status Message Examples" -DoubleBanner -DoubleSpace -ColorBanners
 
 
     Write-StatusMessage -Type 'Process' -Message " Full Paramater Names Tests" -Banner -DoubleSpace -PreSpace
 
-    Write-StatusMessage -Type 'Header'      -Message 'Header Message ...'      -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Type 'Process'     -Message 'Process Message ...'     -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Type 'Success'     -Message 'Success Message ...'     -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Type 'Warning'     -Message 'Warning Message ...'     -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Type 'Failure'     -Message 'Failure Message ...'     -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Type 'Error'       -Message 'Error Message ...'       -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Type 'Exception'   -Message 'Exception Message ...'   -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Type 'Information' -Message 'Information Message ...' -Labels -TimeStamps -DoubleSpace
+    Write-StatusMessage -Type 'Header'      -Message 'Header Message ...'      -Labels -TimeStamps
+    Write-StatusMessage -Type 'Process'     -Message 'Process Message ...'     -Labels -TimeStamps
+    Write-StatusMessage -Type 'Success'     -Message 'Success Message ...'     -Labels -TimeStamps
+    Write-StatusMessage -Type 'Warning'     -Message 'Warning Message ...'     -Labels -TimeStamps
+    Write-StatusMessage -Type 'Failure'     -Message 'Failure Message ...'     -Labels -TimeStamps
+    Write-StatusMessage -Type 'Error'       -Message 'Error Message ...'       -Labels -TimeStamps
+    Write-StatusMessage -Type 'Exception'   -Message 'Exception Message ...'   -Labels -TimeStamps
+    Write-StatusMessage -Type 'Information' -Message 'Information Message ...' -Labels -TimeStamps
 
 
     Write-StatusMessage -t 'Process' -m " Alias Paramater Names Tests" -b -ds -ps
 
-    Write-StatusMessage -t 'Header'      -m 'Header Message ...'      -l -ts -ds
-    Write-StatusMessage -t 'Process'     -m 'Process Message ...'     -l -ts -ds
-    Write-StatusMessage -t 'Success'     -m 'Success Message ...'     -l -ts -ds
-    Write-StatusMessage -t 'Warning'     -m 'Warning Message ...'     -l -ts -ds
-    Write-StatusMessage -t 'Failure'     -m 'Failure Message ...'     -l -ts -ds
-    Write-StatusMessage -t 'Error'       -m 'Error Message ...'       -l -ts -ds
-    Write-StatusMessage -t 'Exception'   -m 'Exception Message ...'   -l -ts -ds
-    Write-StatusMessage -t 'Information' -m 'Information Message ...' -l -ts -ds
+    Write-StatusMessage -t 'Header'      -m 'Header Message ...'      -l -ts
+    Write-StatusMessage -t 'Process'     -m 'Process Message ...'     -l -ts
+    Write-StatusMessage -t 'Success'     -m 'Success Message ...'     -l -ts
+    Write-StatusMessage -t 'Warning'     -m 'Warning Message ...'     -l -ts
+    Write-StatusMessage -t 'Failure'     -m 'Failure Message ...'     -l -ts
+    Write-StatusMessage -t 'Error'       -m 'Error Message ...'       -l -ts
+    Write-StatusMessage -t 'Exception'   -m 'Exception Message ...'   -l -ts
+    Write-StatusMessage -t 'Information' -m 'Information Message ...' -l -ts
 
 
     Write-StatusMessage -Type 'Process' -Message " Full Switch Paramater Names Tests" -Banner -DoubleSpace -PreSpace
 
-    Write-StatusMessage -Header      -Message 'Header Message ...'      -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Process     -Message 'Process Message ...'     -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Success     -Message 'Success Message ...'     -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Warning     -Message 'Warning Message ...'     -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Failure     -Message 'Failure Message ...'     -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Err         -Message 'Error Message ...'       -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Exception   -Message 'Exception Message ...'   -Labels -TimeStamps -DoubleSpace
-    Write-StatusMessage -Information -Message 'Information Message ...' -Labels -TimeStamps -DoubleSpace
+    Write-StatusMessage -Header      -Message 'Header Message ...'      -Labels -TimeStamps
+    Write-StatusMessage -Process     -Message 'Process Message ...'     -Labels -TimeStamps
+    Write-StatusMessage -Success     -Message 'Success Message ...'     -Labels -TimeStamps
+    Write-StatusMessage -Warning     -Message 'Warning Message ...'     -Labels -TimeStamps
+    Write-StatusMessage -Failure     -Message 'Failure Message ...'     -Labels -TimeStamps
+    Write-StatusMessage -Err         -Message 'Error Message ...'       -Labels -TimeStamps
+    Write-StatusMessage -Exception   -Message 'Exception Message ...'   -Labels -TimeStamps
+    Write-StatusMessage -Information -Message 'Information Message ...' -Labels -TimeStamps
 
 
     Write-StatusMessage -p -m " Alias Switch Paramater Names Tests" -b -ds -ps
 
-    Write-StatusMessage -h -m 'Header Message ...'      -l -ts -ds
-    Write-StatusMessage -p -m 'Process Message ...'     -l -ts -ds
-    Write-StatusMessage -s -m 'Success Message ...'     -l -ts -ds
-    Write-StatusMessage -w -m 'Warning Message ...'     -l -ts -ds
-    Write-StatusMessage -f -m 'Failure Message ...'     -l -ts -ds
-    Write-StatusMessage -e -m 'Error Message ...'       -l -ts -ds
-    Write-StatusMessage -x -m 'Exception Message ...'   -l -ts -ds
-    Write-StatusMessage -i -m 'Information Message ...' -l -ts -ds
+    Write-StatusMessage -h -m 'Header Message ...'      -l -ts
+    Write-StatusMessage -p -m 'Process Message ...'     -l -ts
+    Write-StatusMessage -s -m 'Success Message ...'     -l -ts
+    Write-StatusMessage -w -m 'Warning Message ...'     -l -ts
+    Write-StatusMessage -f -m 'Failure Message ...'     -l -ts
+    Write-StatusMessage -e -m 'Error Message ...'       -l -ts
+    Write-StatusMessage -x -m 'Exception Message ...'   -l -ts
+    Write-StatusMessage -i -m 'Information Message ...' -l -ts
 
 
     Write-StatusMessage -p -m " Test Indentation Levels with full names and labels" -b -ds -ps
@@ -85,7 +88,7 @@
     Write-StatusMessage -Type 'Error'       -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
 
 
-    Write-StatusMessage -p -m " Test Indentation Levels with alias switches" -b -ds -ps
+    Write-StatusMessage -p -m " Test Indentation Levels with alias switches and no labels" -b -ds -ps
 
     Write-StatusMessage -i -m 'Level 0 ...' -ts -il 0
     Write-StatusMessage -i -m 'Level 1 ...' -ts -il 1
@@ -96,33 +99,159 @@
     Write-StatusMessage -w -m 'Level 4 ...' -ts -il 4
     Write-StatusMessage -e -m 'Level 4 ...' -ts -il 4
 
+    Write-StatusMessage -p -m " Test Environment Variables DISABLED" -b -ds -ps
+
+    $env:PS_STATUSMESSAGE_LABELS     = $false
+    $env:PS_STATUSMESSAGE_TIMESTAMPS = $false
+
+    Write-StatusMessage -h -m 'Header Message ...'
+    Write-StatusMessage -p -m 'Process Message ...'
+    Write-StatusMessage -s -m 'Success Message ...'
+    Write-StatusMessage -w -m 'Warning Message ...'
+    Write-StatusMessage -f -m 'Failure Message ...'
+    Write-StatusMessage -e -m 'Error Message ...'
+    Write-StatusMessage -x -m 'Exception Message ...'
+    Write-StatusMessage -i -m 'Information Message ...'
+
+
+    Write-StatusMessage -p -m " Test Environment Variables ENABLED" -b -ds -ps
+
+    $env:PS_STATUSMESSAGE_LABELS     = $true
+    $env:PS_STATUSMESSAGE_TIMESTAMPS = $true
+
+    Write-StatusMessage -h -m 'Header Message ...'
+    Write-StatusMessage -p -m 'Process Message ...'
+    Write-StatusMessage -s -m 'Success Message ...'
+    Write-StatusMessage -w -m 'Warning Message ...'
+    Write-StatusMessage -f -m 'Failure Message ...'
+    Write-StatusMessage -e -m 'Error Message ...'
+    Write-StatusMessage -x -m 'Exception Message ...'
+    Write-StatusMessage -i -m 'Information Message ...'
+
+    $env:PS_STATUSMESSAGE_LABELS     = $false
+    $env:PS_STATUSMESSAGE_TIMESTAMPS = $false
+
 
 #==================================================================================================================
 # Run Debug Object Tests
 #==================================================================================================================
 
-    [String] $testString = "Test String"
-    [Int]    $testInt    = 123
-    [Bool]   $testBool   = $true
-    [Array]  $testArray  = @("Test Array Item 1", "Test Array Item 2", "Test Array Item 3")
-    [Object] $testObject = New-Object -TypeName PSObject -Property @{
-                               Name  = "Test Object Name"
-                               Value = "Test Object Value"
-                           }
+    [String]    $testString = "Test String"
+    [Int]       $testInt    = 123
+    [Bool]      $testBool   = $true
+    [String[]]  $testArray  = @("Test Array Item 1", "Test Array Item 2", "Test Array Item 3")
+
+    [Object]    $testObject = New-Object -TypeName PSObject -Property @{
+                                  PropertyName1 = "Property Value 1"
+                                  PropertyName2 = "Property Value 2"
+                              }
+
     [HashTable] $testHashTable = @{
-                                      Name  = "Test HashTable"
-                                      Value = "Test Value"
+                                    PropertyName1 = "Property Value 1"
+                                    PropertyName2 = "Property Value 2"
                                   }
 
-    Write-StatusMessage -Type 'Header' -Message " Debug Object Examples" -DoubleBanner -DoubleSpace
+    $complexObject = @{
+
+        Movies = @(
+            @{
+                Title = 'Movie 1'
+                Year = 2021
+                Genres = @('Action','Adventure','Sci-Fi')
+                Actors = @(
+                    @{ Actor = 'Actor 1'; Role = 'Role 1' }
+                    @{ Actor = 'Actor 2'; Role = 'Role 2' }
+                )
+            },
+            @{
+                Title = 'Movie 2'
+                Year = 2021
+                Genres = @('Action','Adventure','Fantasy')
+                Actors = @(
+                    @{ Actor = 'Actor 1'; Role = 'Role 1' }
+                    @{ Actor = 'Actor 2'; Role = 'Role 2' }
+                    @{ Actor = 'Actor 3'; Role = 'Role 3' }
+                )
+            },
+            @{
+                Title = 'Movie 1'
+                Year = 2021
+                Genres = @('Action','Adventure','Western')
+                Actors = @(
+                    @{ Actor = 'Actor 1'; Role = 'Role 1' }
+                    @{ Actor = 'Actor 2'; Role = 'Role 2' }
+                    @{ Actor = 'Actor 3'; Role = 'Role 3' }
+                    @{ Actor = 'Actor 4'; Role = 'Role 4' }
+                )
+            }
+        )
+        TelevisionShows = @(
+            @{
+                Title = 'Show 1'
+                Year = 2021
+                Genres = @('Action','Adventure','Sci-Fi')
+                Actors = @(
+                    @{ Actor = 'Actor 1'; Role = 'Role 1' }
+                    @{ Actor = 'Actor 2'; Role = 'Role 2' }
+                )
+                Seasons = @(
+                    @{
+                        Season = 1
+                        Episodes = @(
+                            @{ Episode = 1; Title = 'Episode 1'; Description = 'Episode 1 Description' }
+                            @{ Episode = 2; Title = 'Episode 2'; Description = 'Episode 2 Description' }
+                        )
+                    },
+                    @{
+                        Season = 2
+                        Episodes = @(
+                            @{ Episode = 1; Title = 'Episode 1'; Description = 'Episode 1 Description' }
+                            @{ Episode = 2; Title = 'Episode 2'; Description = 'Episode 2 Description' }
+                        )
+                    }
+                )
+            },
+            @{
+                Title = 'Show 2'
+                Year = 2021
+                Genres = @('Action','Adventure','Fantasy')
+                Actors = @(
+                    @{ Actor = 'Actor 1'; Role = 'Role 1' }
+                    @{ Actor = 'Actor 2'; Role = 'Role 2' }
+                    @{ Actor = 'Actor 3'; Role = 'Role 3' }
+                )
+                Seasons = @(
+                    @{
+                        Season = 1
+                        Episodes = @(
+                            @{ Episode = 1; Title = 'Episode 1'; Description = 'Episode 1 Description' }
+                            @{ Episode = 2; Title = 'Episode 2'; Description = 'Episode 2 Description' }
+                        )
+                    },
+                    @{
+                        Season = 2
+                        Episodes = @(
+                            @{ Episode = 1; Title = 'Episode 1'; Description = 'Episode 1 Description' }
+                            @{ Episode = 2; Title = 'Episode 2'; Description = 'Episode 2 Description' }
+                        )
+                    }
+                )
+            }
+        )
+    }
 
 
-    Write-StatusMessage -Type 'Process' -Message " Full Paramater Names Tests" -Banner -DoubleSpace -PreSpace
+    Write-Msg -h -m " Debug Object Examples" -bb -ds  -ps -cb
 
-    Write-StatusMessage -Information -Message 'Debug Object ...' -DebugObject $testString
-    Write-StatusMessage -Information -Message 'Debug Object ...' -DebugObject $testInt
-    Write-StatusMessage -Information -Message 'Debug Object ...' -DebugObject $testBool
-    Write-StatusMessage -Information -Message 'Debug Object ...' -DebugObject $testArray
-    Write-StatusMessage -Information -Message 'Debug Object ...' -DebugObject $testObject
-    Write-StatusMessage -Information -Message 'Debug Object ...' -DebugObject $testHashTable
+    Write-Msg -p -m " Full Paramater Names Tests" -b -ds -ps
+
+    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testString
+    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testInt
+    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testBool
+    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testArray
+    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testObject
+    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testHashTable
+    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $complexObject -MaxRecursionDepth 5
+
+    Write-Msg -i -il 3 -ds -m 'Debug Object: ' -do $complexObject -MaxRecursionDepth 30
 

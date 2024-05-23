@@ -26,13 +26,6 @@ Function Initialize-PipelineObject {
         OPTIONAL. Hashtable. Alias: -t. Determines if the commom powershell paramaters should be included
         in the pipeline object. This also requires that [CmdletBinding()] is defined in teh calling function.
 
-    .PARAMETER LogInvocationInformation
-        OPTIONAL. Switch. Alias: -l, -log. Logs the function call and any parameters passed to the function.
-
-    .PARAMETER IncludeCommonParameters
-        OPTIONAL. Switch. Alias: -i, -icp. Determines if the commom powershell paramaters should be included
-        in the pipeline object. This also requires that [CmdletBinding()] is defined in teh calling function.
-
     .PARAMETER ReturnInvocationID
         OPTIONAL. Switch. Alias: -r, -rii. Includes the invocation ID as part of the return values. All calls to
         the entrypoint function will have their invocation data stored in the PipelineObject.Invocation hashtable.
@@ -47,6 +40,29 @@ Function Initialize-PipelineObject {
             or
 
             $PipelineObject, $InvocationID = Initialize-PipelineObject -ReturnInvocationID
+
+    .PARAMETER LogInvocation
+        OPTIONAL. Switch. Alias: -l, -log. Logs the function call and any parameters passed to the function.
+
+    .PARAMETER DontLogParameters
+        OPTIONAL. Switch. Alias: -p, -dlp. Skips the logging of all parameters passed to the function so only the
+        function call is logged.
+
+    .PARAMETER LogPipelineObjectValues
+        OPTIONAL. Switch. Alias: -o, -lpo. Include the PipeLineObject in the parameter logs. This object is
+        skipped by default.
+
+    .PARAMETER IgnoreParameterNames
+        OPTIONAL. String Array. Alias: -g, -ipn. Skips logging any parameters whose name is in the defined array.
+        Default value: @('Invocation'), which is PipelineObject's own property.
+        This value can be set using an environment variable.
+            Example: $env:PS_STATUSMESSAGE_IGNORE_PARAM_NAMES = '["Invocation","Token"]'
+        NOTE: Environment variable values are always treated as strings and do not support arrays or other complex
+              object types, so the value must be stored in JSON array format: '["Invocation","Token"]'
+
+    .PARAMETER IncludeCommonParameters
+        OPTIONAL. Switch. Alias: -i, -icp. Determines if the commom powershell paramaters should be included
+        in the pipeline object. This also requires that [CmdletBinding()] is defined in teh calling function.
 
     .EXAMPLE
         The following code:
@@ -82,12 +98,14 @@ Function Initialize-PipelineObject {
     param (
         [Parameter(ValueFromPipeline)]  [Hashtable] $PipelineObject = @{},
         [Parameter()][Alias('t')]       [Hashtable] $Tests,
-        [Parameter()][Alias('i','icp')] [Switch]    $IncludeCommonParameters,
         [Parameter()][Alias('r','rii')] [Switch]    $ReturnInvocationID,
-        [Parameter()][Alias('l','log')] [Switch]    $LogInvocationInformation,
-        [Parameter()][Alias('f','nlf')] [Switch]    $NoLogFunctionCalls,
-        [Parameter()][Alias('p','nlp')] [Switch]    $NoLogParameters,
-        [Parameter()][Alias('v','nlv')] [Switch]    $NoLogPipelineObjectValues
+        [Parameter()][Alias('l','log')] [Switch]    $LogInvocation,
+        [Parameter()][Alias('p','dlp')] [Switch]    $DontLogParameters,
+        [Parameter()][Alias('o','lpo')] [Switch]    $LogPipelineObjectValues,
+
+        [Parameter()][Alias('i','icp')] [Switch]    $IncludeCommonParameters,
+        [Parameter()][Alias('g','ipn')] [String[]]  $IgnoreParameterNames = ( $env:PS_STATUSMESSAGE_IGNORE_PARAMS_JSON |
+                                                                              ConvertFrom-JSON )
     )
 
     process {
@@ -101,19 +119,24 @@ Function Initialize-PipelineObject {
                 Remove-RecursiveObjectKey |
                 Add-BoundParameterValues |
                 Add-DefaultParameterValues |
-                Test-Parameters
-                # Remove-TemporaryInvocationData ???
-                # Log-InvocationInformation
+                Test-Parameters |
+                Remove-RecursiveInvocationObjects |
+                Write-InvocationEventLog |
+                Write-InvocationEventLogParameters |
+                Out-Null
+
+            Write-Output $PipelineObject
 
             if ( $ReturnInvocationID ) { Write-Output $PipelineObject.Invocation.ID }
 
-            return
-
         }
         catch {
-            Write-Host $('{0}::{1}::{2}::Line {3}' -f $PS_MODULE_NAME, $MyInvocation.InvocationName,
-                                                      $_.Exception.Message, $_.InvocationInfo.ScriptLineNumber)
+
+            Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
+
         }
 
     }
 }
+
+

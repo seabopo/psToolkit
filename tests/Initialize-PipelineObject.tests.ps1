@@ -58,24 +58,23 @@
                     CustomEntry2 = 'Custom text string XXX'
                     CustomEntry3 = @{ value1='value1111'; value2='value2222' }
                 }
-                $PO,$id = $invocationData | Initialize-PipelineObject -l -r -t @{ AllAreNull = @('StringParam','IntParam') }
+                $PO,$ID = $invocationData | Initialize-PipelineObject -l -r -t @{ AllAreNull = @('StringParam','IntParam') }
 
-                $PO.Invocation.ID
+                Write-Host ( 'Invocation ID: {0}' -f $PO.Invocation.ID ) -ForegroundColor Green
+
                 if ( $PO.Invocation[$ID].ParameterTests.Successful ) {
                     $PO | Test-PipelineObjectStep2 | Out-Null
-                    $PO | Test-PipelineObjectStep3 | Out-Null
+                    $PO | Test-PipelineObjectStep3 -test $PO | Out-Null
                 }
 
-                $PO
+                #$PO
             }
 
             catch {
-                # $PO.Logs[$LogID] += $('... Result: Exception Error.')
-                # $PO.Logs[$LogID] += $('... Error Message: {0}' -f $($_.Exception.Message))
-                # $PO.Logs[$LogID] += $('... Error Details: {0}' -f $($_.ErrorDetails.Message))
+                write-host $_.Exception.Message    -ForegroundColor Red
+                write-host $_.ErrorDetails.Message -ForegroundColor Red
             }
 
-            #if ( $PSCmdlet.ParameterSetName -eq 'P' ) { return $PO } else { $PO | Write-Logs; return $PO.ListEntry }
         }
     }
 
@@ -109,7 +108,8 @@
         process {
 
             $PO | Initialize-PipelineObject -log
-            $PO.Invocation.ID
+
+            $PO
 
         }
     }
@@ -121,16 +121,14 @@
         param (
             [Parameter()] [String] $StringParamX = 'Default text string X',
             [Parameter()] [String] $StringParamY = 'Default text string Y',
+            [Parameter()] [Hashtable] $Test,
 
             [Parameter(DontShow,ValueFromPipeline,ParameterSetName='P')] [Hashtable] $PO
         )
 
         process {
 
-            $PO,$id = Initialize-PipelineObject -l -r -t @{ AnyIsNull = @('StringParamX','badParam') }
-
-            $PO
-            $id
+            $PO,$id = Initialize-PipelineObject -l -o -r -t @{ AnyIsNull = @('StringParamX','badParam') }
 
         }
     }
@@ -144,3 +142,8 @@ $testparams = @{
 }
 
 Test-PipelineObjectStep1x @testparams
+
+exit
+
+
+

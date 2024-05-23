@@ -5,7 +5,7 @@ Function Add-InvocationData {
         The Invocation hashtable is a callstack of each entrypoint call for the PipelineObject so that the data
         can be used for error reporting.
     #>
-    [OutputType([hashtable])]
+    [OutputType([Hashtable])]
     [CmdletBinding()]
     param ( [Parameter(Mandatory,ValueFromPipeline)] [Hashtable] $PipelineObject )
 
@@ -28,37 +28,44 @@ Function Add-InvocationData {
           # Get the caller's invocation information.
             $InvocationInfo = $callStack[1].InvocationInfo
 
-          # Get the predecessor's information - if it exists.
-            $predecessorSource      = if ( $callStack[2] ) { $callStack[2].ToString() } else { '' }
-            $predecessorInvokedFrom = if ( $callStack[2] ) { $callStack[2].Location   } else { '' }
-
           # Build the invocation object.
             $Invocation = @{
-                ID                        = '{0}::{1}::{2}' -f $InvocationInfo.InvocationName,
-                                                               $predecessorInvokedFrom,
-                                                               [Guid]::NewGuid()
-                LocalTime                 = Get-Date
-                PowerShellVersion         = $PSVersionTable.PSVersion
-                PowerShellEdition         = $PSVersionTable.PSEdition
-                PowerShellPlatform        = $PSVersionTable.Platform
-                PowerShellOS              = $PSVersionTable.OS
-                Account                   = $([Security.Principal.WindowsIdentity]::GetCurrent().Name)
-                Device                    = $env:COMPUTERNAME
-                IPAddress                 = $(Get-NetIPAddress)
-                Source                    = $predecessorSource
-                InvokedFrom               = $predecessorInvokedFrom
-                Name                      = $InvocationInfo.InvocationName
-                Command                   = $InvocationInfo.MyCommand
-                BoundParameters           = $InvocationInfo.BoundParameters
-                DefinedParameters         = $InvocationInfo.MyCommand.ScriptBlock.Ast.Body.ParamBlock.Parameters
-                AllParameters             = $InvocationInfo.MyCommand.Parameters
-                CallStack                 = $callStack
-                EnableLogging             = $($entryPointParams.keys -contains 'EnableLogging')
-                NoLogFunctionCalls        = $($entryPointParams.keys -contains 'NoLogFunctionCalls')
-                NoLogParameters           = $($entryPointParams.keys -contains 'NoLogParameters')
-                NoLogPipelineObjectValues = $($entryPointParams.keys -contains 'NoLogPipelineObjectValues')
-                IncludeCommonParameters   = $($entryPointParams.keys -contains 'IncludeCommonParameters')
-                ParameterTests            = @{ Defined = $false; Successful = $true; Errors = @() }
+
+                ID                          = '{0}::{1}::{2}' -f $InvocationInfo.InvocationName,
+                                                                 $predecessorInvokedFrom,
+                                                                 [Guid]::NewGuid()
+                CallName                    = $InvocationInfo.InvocationName
+                CommandName                 = $InvocationInfo.MyCommand.Name
+                Time                        = $((Get-Date).ToString('yyyy-MM-dd:HH-mm-ss-fff'))
+                InvokedFromPath             = if ( $callStack[2] ) { $callStack[2].ToString() } else { '' }
+                InvokedFromName             = if ( $callStack[2] ) { $callStack[2].Location   } else { '' }
+
+                CallStack                   = $callStack
+                Command                     = $InvocationInfo.MyCommand
+                AllParameters               = $InvocationInfo.MyCommand.Parameters
+                BoundParameters             = $InvocationInfo.BoundParameters
+                DefinedParameters           = $InvocationInfo.MyCommand.ScriptBlock.Ast.Body.ParamBlock.Parameters
+
+                PipelineObjectParameterName = $null
+
+                ParameterTests              = @{ Defined = $false; Successful = $true; Errors = @() }
+
+                PowerShellVersion           = $PSVersionTable.PSVersion
+                PowerShellEdition           = $PSVersionTable.PSEdition
+                PowerShellPlatform          = $PSVersionTable.Platform
+                PowerShellOS                = $PSVersionTable.OS
+                Account                     = $([Security.Principal.WindowsIdentity]::GetCurrent().Name)
+                Device                      = $env:COMPUTERNAME
+                IPAddresses                 = Get-NetIPAddress | ForEach-Object {
+                                                  @{ $_.InterfaceAlias = $_.IPAddress }
+                                               }
+
+                LogInvocation               = $($entryPointParams.keys -contains 'LogInvocation')
+                DontLogParameters           = $($entryPointParams.keys -contains 'DontLogParameters')
+                LogPipelineObjectValues     = $($entryPointParams.keys -contains 'LogPipelineObjectValues')
+                IncludeCommonParameters     = $($entryPointParams.keys -contains 'IncludeCommonParameters')
+                IgnoreParameterNames        = $IgnoreParameterNames
+
             }
 
           # Add the invocation object to the PipelineObject's Invocation collection.
@@ -69,17 +76,13 @@ Function Add-InvocationData {
           # for error reporting or debugging.
             $PipelineObject.Invocation.ID = $Invocation.ID
 
-            return $PipelineObject
+          # Write the updated object to the pipeline.
+            Write-Output $PipelineObject
 
         }
         catch {
 
-          $exceptionMessage = $PS_EXCEPTION_MSG -f $_.Exception.Message,
-                                                   $MyInvocation.InvocationName,
-                                                   $_.InvocationInfo.ScriptLineNumber,
-                                                   $_.ScriptStackTrace
-
-          Write-Msg -x -m $exceptionMessage -TS
+          Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
 
       }
 

@@ -12,16 +12,16 @@
 
     $ErrorActionPreference = "Stop"
 
-    if ($IsWindows) { $lineBreak = "`r`n" } else { $lineBreak = "`n" }
+    Set-Variable -Scope 'Local' -Name "PS_MODULE_ROOT" -Value $PSScriptRoot
+    Set-Variable -Scope 'Local' -Name "PS_MODULE_NAME" -Value $($PSScriptRoot | Split-Path -Leaf)
 
-    Set-Variable -Scope 'Local' -Name "PS_MODULE_ROOT"      -Value $PSScriptRoot
-    Set-Variable -Scope 'Local' -Name "PS_MODULE_NAME"      -Value $($PSScriptRoot | Split-Path -Leaf)
-
-    Set-Variable -Scope 'Local' -Name "PS_EXCEPTION_MSG"    -Value $( "Unhandled Exception Error: " + $lineBreak +
-                                                                      "    Error Message: {0}" + $lineBreak +
-                                                                      "    Function: {1}, line: {2}." + $lineBreak +
-                                                                      "    Module: " + $PS_MODULE_NAME + $lineBreak +
-                                                                      "{3}")
+    $env:PS_STATUSMESSAGE_BANNER_STRING       = '='
+    $env:PS_STATUSMESSAGE_BANNER_LENGTH       = 80
+    $env:PS_STATUSMESSAGE_COLOR_BANNERS       = $false
+    $env:PS_STATUSMESSAGE_INDENTATION_STRING  = '...'
+    $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH = 100
+    $env:PS_STATUSMESSAGE_COLOR_DEBUG_OBJECTS = $false
+    $env:PS_STATUSMESSAGE_IGNORE_PARAMS_JSON  = '["Invocation"]'
 
 #==================================================================================================================
 # LOAD FUNCTIONS AND EXPORT PUBLIC FUNCTIONS AND ALIASES

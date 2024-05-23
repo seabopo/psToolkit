@@ -10,20 +10,29 @@ function Set-StatusMessageColor {
 
     process {
 
-        $MessageObject.MessageColor = switch ( $MessageObject.Type )
-                                      {
-                                          "Process"     { "Cyan"    }
-                                          "Header"      { "Magenta" }
-                                          "Information" { "Gray"    }
-                                          "Success"     { "Green"   }
-                                          "Warning"     { "Yellow"  }
-                                          "Failure"     { "Red"     }
-                                          "Error"       { "Red"     }
-                                          "Exception"   { "Red"     }
-                                          default       { "Gray"    }
-                                      }
+        try {
 
-        Write-Output $MessageObject
+            $MessageObject.MessageColor = switch ( $MessageObject.Type )
+                                        {
+                                            "Process"     { "Cyan"    }
+                                            "Header"      { "Magenta" }
+                                            "Information" { "Gray"    }
+                                            "Success"     { "Green"   }
+                                            "Warning"     { "Yellow"  }
+                                            "Failure"     { "Red"     }
+                                            "Error"       { "Red"     }
+                                            "Exception"   { "Red"     }
+                                            default       { "Gray"    }
+                                        }
+
+            Write-Output $MessageObject
+
+        }
+        catch {
+
+            Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
+
+        }
 
     }
 }

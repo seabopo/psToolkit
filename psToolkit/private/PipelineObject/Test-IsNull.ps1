@@ -32,12 +32,7 @@ Function Test-IsNull {
         }
         catch {
 
-            $exceptionMessage = $PS_EXCEPTION_MSG -f $_.Exception.Message,
-                                                     $MyInvocation.InvocationName,
-                                                     $_.InvocationInfo.ScriptLineNumber,
-                                                     $_.ScriptStackTrace
-
-            Write-Msg -x -m $exceptionMessage -TS
+            Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
 
         }
 

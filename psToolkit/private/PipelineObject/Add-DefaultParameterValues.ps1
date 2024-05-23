@@ -1,10 +1,10 @@
 Function Add-DefaultParameterValues {
     <#
     .DESCRIPTION
-        Adds the default values of the 'BoundParameters' collection in the callstack's invocation to the
-        PipelineObject. Default values will only override existing null values or empty strings.
+        Adds the default values of the 'DefinedParameters' collection in the callstack's invocation to the
+        PipelineObject. Default values will only override null values or empty strings.
     #>
-    [OutputType([hashtable])]
+    [OutputType([Hashtable])]
     [CmdletBinding()]
     param ( [Parameter(Mandatory,ValueFromPipeline)] [Hashtable] $PipelineObject )
 
@@ -12,11 +12,11 @@ Function Add-DefaultParameterValues {
 
         try {
 
-            $invocation = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
+            $i = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
 
-            if ( $invocation.DefinedParameters ) {
+            if ( $i.DefinedParameters ) {
 
-                $invocation.DefinedParameters.GetEnumerator() |
+                $i.DefinedParameters.GetEnumerator() |
                     ForEach-Object {
                         $name         = $_.Name.VariablePath.UserPath.ToString()
                         $defaultValue = $_.DefaultValue
@@ -29,17 +29,12 @@ Function Add-DefaultParameterValues {
 
             }
 
-            return $PipelineObject
+            Write-Output $PipelineObject
 
         }
         catch {
 
-            $exceptionMessage = $PS_EXCEPTION_MSG -f $_.Exception.Message,
-                                                     $MyInvocation.InvocationName,
-                                                     $_.InvocationInfo.ScriptLineNumber,
-                                                     $_.ScriptStackTrace
-
-            Write-Msg -x -m $exceptionMessage -TS
+            Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
 
         }
 

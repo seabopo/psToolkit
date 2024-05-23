@@ -6,7 +6,7 @@ Function Test-Parameters {
          - AnyIsNull
          - AllAreNull
     #>
-    [OutputType([hashtable])]
+    [OutputType([Hashtable])]
     [CmdletBinding()]
     param ( [Parameter(Mandatory,ValueFromPipeline)] [Hashtable] $PipelineObject )
 
@@ -18,13 +18,13 @@ Function Test-Parameters {
 
         try {
 
-            $invocation = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
+            $i = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
 
-            if ( $invocation.CallStack[0].InvocationInfo.BoundParameters.ContainsKey('Tests') ) {
+            if ( $i.CallStack[0].InvocationInfo.BoundParameters.ContainsKey('Tests') ) {
 
-                $invocation.ParameterTests.Defined = $true
+                $i.ParameterTests.Defined = $true
 
-                $tests = $invocation.CallStack[0].InvocationInfo.BoundParameters['Tests']
+                $tests = $i.CallStack[0].InvocationInfo.BoundParameters['Tests']
 
                 $tests.keys | ForEach-Object {
 
@@ -46,23 +46,23 @@ Function Test-Parameters {
                         if ( $params.count -eq $tests[$testName].count ) {
                             $validationFailed, $failedValues = Test-IsNull -n $testName -v $params -r
                             if ( $validationFailed ) {
-                                $invocation.ParameterTests.Successful = $false
-                                $invocation.ParameterTests.Errors += $(
+                                $i.ParameterTests.Successful = $false
+                                $i.ParameterTests.Errors += $(
                                     '{0} test failed becasue the these values are null: ' -f
                                     $testName, $($failedValues -Join ','))
                             }
                         }
                         else {
-                            $invocation.ParameterTests.Successful = $false
-                            $invocation.ParameterTests.Errors += $(
+                            $i.ParameterTests.Successful = $false
+                            $i.ParameterTests.Errors += $(
                                 '{0} test failed. PipelineObject is missing the following Parameter value(s): {1}' -f
                                 $testName, $($missingParams -Join ','))
                         }
 
                     }
                     else {
-                        $invocation.ParameterTests.Successful = $false
-                        $invocation.ParameterTests.Errors += $(
+                        $i.ParameterTests.Successful = $false
+                        $i.ParameterTests.Errors += $(
                             'Tests failed. The following validation test name is not valid: {1}' -f $testName )
                     }
 
@@ -70,17 +70,12 @@ Function Test-Parameters {
 
             }
 
-            return $PipelineObject
+            Write-Output $PipelineObject
 
         }
         catch {
 
-            $exceptionMessage = $PS_EXCEPTION_MSG -f $_.Exception.Message,
-                                                     $MyInvocation.InvocationName,
-                                                     $_.InvocationInfo.ScriptLineNumber,
-                                                     $_.ScriptStackTrace
-
-            Write-Msg -x -m $exceptionMessage -TS
+            Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
 
         }
 

@@ -6,7 +6,7 @@ Function Add-CommonParameterKeys {
         the 'CmdletBinding' attribute. They include: Verbose, Debug, ErrorAction, ErrorVariable, WarningAction,
         WarningVariable, OutBuffer, OutVariable, PipelineVariable, and InformationAction.
     #>
-    [OutputType([hashtable])]
+    [OutputType([Hashtable])]
     [CmdletBinding()]
     param ( [Parameter(Mandatory,ValueFromPipeline)] [Hashtable] $PipelineObject )
 
@@ -14,27 +14,22 @@ Function Add-CommonParameterKeys {
 
         try {
 
-            $invocation = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
+            $i = $PipelineObject.Invocation[$PipelineObject.Invocation.ID]
 
-            if ( $invocation.IncludeCommonParameters ) {
-                $functionDefinition = Get-Command $invocation.Command
+            if ( $i.IncludeCommonParameters ) {
+                $functionDefinition = Get-Command $i.Command
                 $functionDefinition.Parameters.Keys |
                     ForEach-Object {
                         if ( -not $PipelineObject.ContainsKey($_) ) { $PipelineObject.Add( $_,$null ) }
                     }
             }
 
-            return $PipelineObject
+            Write-Output $PipelineObject
 
         }
         catch {
 
-            $exceptionMessage = $PS_EXCEPTION_MSG -f $_.Exception.Message,
-                                                     $MyInvocation.InvocationName,
-                                                     $_.InvocationInfo.ScriptLineNumber,
-                                                     $_.ScriptStackTrace
-
-            Write-Msg -x -m $exceptionMessage -TS
+            Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
 
         }
 
