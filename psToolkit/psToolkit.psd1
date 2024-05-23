@@ -98,10 +98,10 @@ PrivateData = @{
         # Tags = @()
 
         # A URL to the license for this module.
-          LicenseUri = ''
+          LicenseUri = 'https://github.com/seabopo/psToolkit/blob/main/LICENSE'
 
         # A URL to the main website for this project.
-          ProjectUri = ''
+          ProjectUri = 'https://github.com/seabopo/psToolkit'
 
         # A URL to an icon representing this module.
         # IconUri = ''
@@ -123,7 +123,7 @@ PrivateData = @{
 } # End of PrivateData hashtable
 
 # HelpInfo URI of this module
-  HelpInfoURI = 'https://github.com/seabopo/psToolkit'
+  HelpInfoURI = 'https://github.com/seabopo/psToolkit/blob/main/README.md'
 
 # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
 # DefaultCommandPrefix = ''
