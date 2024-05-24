@@ -55,12 +55,13 @@ Function ConvertTo-MessageString {
             if ( $Object.GetType().Name -eq 'ErrorRecord' ) {
 
                 $functionName = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'Command'
+                $statement = $Object.InvocationInfo.Statement ?? $Object.InvocationInfo.Line ?? '<Not available>'
                 $multiLineReturnValue = $false
                 $returnValue = $errorMessage -f $PS_MODULE_NAME,
                                                 $functionName,
                                                 $Object.InvocationInfo.ScriptLineNumber,
                                                 $Object.Exception.Message,
-                                                $Object.InvocationInfo.Statement.ToString(),
+                                                $($statement.ToString().Trim()),
                                                 $Object.ScriptStackTrace,
                                                 $PSVersionTable.PSVersion.ToString(),
                                                 $PSVersionTable.PSEdition,
