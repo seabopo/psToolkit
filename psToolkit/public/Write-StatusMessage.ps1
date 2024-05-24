@@ -48,7 +48,7 @@ function Write-StatusMessage {
 
     .PARAMETER Exception
         OPTIONAL. Switch. Alias: -x. Switch alternative for the Exception Type paramater. Message Color: Red.
-        Assigning the Error object to the DebugObject parameter for this type of message will automatically
+        Assigning the Error object to the MessageObject parameter for this type of message will automatically
         generate an exception message based on the error details and append it to the message parameter.
 
     .PARAMETER TimeStamps

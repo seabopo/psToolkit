@@ -267,3 +267,5 @@
 
     Write-Msg -i -il 3 -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 30
 
+    Write-Msg -i -il 3 -ds -m 'Debug Object: ' -do $complexObject -MaxRecursionDepth 30
+
