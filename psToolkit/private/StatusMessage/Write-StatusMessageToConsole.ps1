@@ -24,7 +24,7 @@ function Write-StatusMessageToConsole {
 
             if ( $MessageObject.MessageBanners ) { Write-Host $MessageObject.MessageBanners @bannerColor }
 
-            if ( $null -eq $MessageObject.DebugObject ) {
+            if ( $null -eq $MessageObject.MessageObject ) {
 
                 $MessageObject.Message = $MessageObject.MessagePrefix + $MessageObject.Message
                 Write-Host $MessageObject.Message -ForegroundColor $MessageObject.MessageColor
@@ -33,15 +33,15 @@ function Write-StatusMessageToConsole {
             else {
 
                 $convertParams = @{
-                    Object          = $MessageObject.DebugObject
+                    Object          = $MessageObject.MessageObject
                     MaxDepth        = $MessageObject.MaxRecursionDepth
-                    MultiLinePrefix = $MessageObject.DebugObjectPrefix
+                    MultiLinePrefix = $MessageObject.MessageObjectPrefix
                 }
                 $value, $multiLine = ConvertTo-MessageString @convertParams -r
 
                 if ( $multiLine ) {
                     $MessageObject.Message = $MessageObject.MessagePrefix + $MessageObject.Message +
-                                             '[' + $MessageObject.DebugObject.GetType().Name + ']' +
+                                             '[' + $MessageObject.MessageObject.GetType().Name + ']' +
                                              $value
                     Write-Host $MessageObject.Message -ForegroundColor $MessageObject.MessageColor
                 }

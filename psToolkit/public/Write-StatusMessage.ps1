@@ -48,7 +48,7 @@ function Write-StatusMessage {
 
     .PARAMETER Exception
         OPTIONAL. Switch. Alias: -x. Switch alternative for the Exception Type paramater. Message Color: Red.
-        Assigning the Error object to the DebugObject parameter for this type of message will automatically
+        Assigning the Error object to the MessageObject parameter for this type of message will automatically
         generate an exception message based on the error details and append it to the message parameter.
 
     .PARAMETER TimeStamps
@@ -108,14 +108,12 @@ function Write-StatusMessage {
     .PARAMETER PreSpace
         OPTIONAL. Switch. Alias: -ps. Adds a blank line before the logged item.
 
-    .PARAMETER DebugObject
-        OPTIONAL. Alias: -do. A variable whose properties will be written to the console. The object is
-        converted to a JSON object for display to the screen. If the object is a simple type (string, int, etc.)
-        it will be written directly on the same line as the message. if the object is a complex type, it will be
-        written on multiple lines following the message line.
+    .PARAMETER MessageObject
+        OPTIONAL. Alias: -o. An object whose properties will be written to the console. The object is
+        converted to JSON for output to the console.
 
     .PARAMETER MaxRecursionDepth
-        OPTIONAL. Integer. Alias: -rd. The maximum depth of recursion when converting the DebugObject to a JSON
+        OPTIONAL. Integer. Alias: -rd. The maximum depth of recursion when converting the MessageObject to a JSON
         string. Default value: 3. The powreshell maxium value is 100.
         This value can be set using an environment variable.
             Example: $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH = 10
@@ -185,7 +183,7 @@ function Write-StatusMessage {
         [Alias('ds')] [Switch]         $DoubleSpace,
         [Alias('ps')] [Switch]         $PreSpace,
 
-        [Alias('do')]                  $DebugObject,
+        [Alias('o')]                   $MessageObject,
         [Alias('rd')] [Int]            $MaxRecursionDepth = 3
 
     )
@@ -227,11 +225,11 @@ function Write-StatusMessage {
                 ColorBanners       = $ColorBanners.ToBool()
                 DoubleSpace        = $DoubleSpace.ToBool()
                 PreSpace           = $PreSpace.ToBool()
-                DebugObject        = $DebugObject
+                MessageObject        = $MessageObject
                 MaxRecursionDepth  = $MaxRecursionDepth
                 MessagePrefix      = $null
                 MessageBanners     = $null
-                DebugObjectPrefix  = $null
+                MessageObjectPrefix  = $null
             }
 
           # Pipeline the message object through all of the message formatting functions.

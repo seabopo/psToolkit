@@ -141,7 +141,7 @@
         write-host ('test:{0}{3}' -f 'red','green')
     }
     catch {
-        Write-Msg -x -m "custom error message`r`n" -do $_
+        Write-Msg -x -m "custom error message`r`n" -o $_
     }
 
 #==================================================================================================================
@@ -257,13 +257,12 @@
 
     Write-Msg -p -m " Full Paramater Names Tests" -b -ds -ps
 
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testString
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testInt
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testBool
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testArray
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testObject
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testHashTable
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $complexObject -MaxRecursionDepth 5
+    Write-Msg -i -ds -m 'Debug Object: ' -MessageObject $testString
+    Write-Msg -i -ds -m 'Debug Object: ' -MessageObject $testInt
+    Write-Msg -i -ds -m 'Debug Object: ' -MessageObject $testBool
+    Write-Msg -i -ds -m 'Debug Object: ' -MessageObject $testArray
+    Write-Msg -i -ds -m 'Debug Object: ' -MessageObject $testObject
+    Write-Msg -i -ds -m 'Debug Object: ' -MessageObject $testHashTable
+    Write-Msg -i -ds -m 'Debug Object: ' -MessageObject $complexObject -MaxRecursionDepth 5
 
-    Write-Msg -i -il 3 -ds -m 'Debug Object: ' -do $complexObject -MaxRecursionDepth 30
-
+    Write-Msg -i -il 3 -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 30

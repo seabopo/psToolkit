@@ -35,7 +35,7 @@ function Set-StatusMessagePrefix {
             $MessageObject.MessagePrefix = $prefix -join ''
 
             if ( $null -ne $MessageObject.MessagePrefix ) {
-                $MessageObject.DebugObjectPrefix = $MessageObject.MessagePrefix.Trim() +
+                $MessageObject.MessageObjectPrefix = $MessageObject.MessagePrefix.Trim() +
                 $MessageObject.IndentationString + ' '
             }
 
