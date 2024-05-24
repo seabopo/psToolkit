@@ -15,7 +15,7 @@
 
     $ErrorActionPreference = "Stop"
 
-    Import-Module $("../{0}" -f (Get-Item $PSScriptRoot).Parent.Name) -Force
+    Import-Module '../psToolkit' -Force
 
 
 #==================================================================================================================
@@ -24,7 +24,7 @@
 
     function Test-PipelineObjectStep1 {
         <#
-        .SYNOPSIS
+        .DESCRIPTION
             Tests the Initialize-PipelineObject function.
         #>
         [CmdletBinding()]
@@ -67,7 +67,8 @@
                     $PO | Test-PipelineObjectStep3 -test $PO | Out-Null
                 }
 
-                #$PO
+                $PO
+
             }
 
             catch {
@@ -79,10 +80,6 @@
     }
 
     function Test-PipelineObjectStep2 {
-        <#
-        .SYNOPSIS
-            Tests the Initialize-PipelineObject function.
-        #>
         [CmdletBinding()]
         [Alias('Test-InitializePipelineObjectX')]
         param (
@@ -106,11 +103,8 @@
         )
 
         process {
-
             $PO | Initialize-PipelineObject -log
-
             $PO
-
         }
     }
 

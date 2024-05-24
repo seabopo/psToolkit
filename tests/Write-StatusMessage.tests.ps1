@@ -15,7 +15,7 @@
 
     $ErrorActionPreference = "Stop"
 
-    Import-Module $("../{0}" -f (Get-Item $PSScriptRoot).Parent.Name) -Force
+    Import-Module '../psToolkit' -Force
 
     $env:PS_STATUSMESSAGE_LABELS     = $false
     $env:PS_STATUSMESSAGE_TIMESTAMPS = $false
