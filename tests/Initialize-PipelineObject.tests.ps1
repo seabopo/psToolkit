@@ -23,10 +23,6 @@
 #==================================================================================================================
 
     function Test-PipelineObjectStep1 {
-        <#
-        .DESCRIPTION
-            Tests the Initialize-PipelineObject function.
-        #>
         [CmdletBinding()]
         [Alias('Test-PipelineObjectStep1x')]
         param (
