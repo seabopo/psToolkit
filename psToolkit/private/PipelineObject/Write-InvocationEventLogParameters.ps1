@@ -38,7 +38,7 @@ Function Write-InvocationEventLogParameters {
                                 $msg.Add( $('[{0}]' -f $_.Value.GetType().Name) )
                             }
                             else {
-                                $value, $multiLine = ConvertTo-MessageString -o $_.Value -p '......' -r -d 0
+                                $value, $multiLine = ConvertTo-MessageString -o $_.Value -p ($indent * 3) -r -d 0
                                 if ( $multiLine ) {
                                     $msg.Add( $('[{0}]' -f $_.Value.GetType().Name) )
                                     $msg.Add( $value )
