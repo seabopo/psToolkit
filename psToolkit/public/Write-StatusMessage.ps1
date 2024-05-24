@@ -48,7 +48,8 @@ function Write-StatusMessage {
 
     .PARAMETER Exception
         OPTIONAL. Switch. Alias: -x. Switch alternative for the Exception Type paramater. Message Color: Red.
-        This switch will also write the last exception error message to the console.
+        Assigning the Error object to the DebugObject parameter for this type of message will automatically
+        generate an exception message based on the error details and append it to the message parameter.
 
     .PARAMETER TimeStamps
         OPTIONAL. Switch. Alias: -ts. Prefixes each message with a timestamp in the format" 'yyyy-MM-dd HH:mm:ss'.
@@ -244,7 +245,7 @@ function Write-StatusMessage {
         }
         catch {
 
-            Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
+            Write-ExceptionMessage -e $_
 
         }
 

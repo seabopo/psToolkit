@@ -16,18 +16,25 @@ Function Write-ExceptionMessage {
         [Parameter()] [String] [Alias('n')] $FunctionName
     )
 
-    $msg = New-Object System.Collections.Generic.List[System.String]
+    $errorMessage = $( 'Unhandled Exception Error:'   ) + [System.Environment]::NewLine +
+                    $('    Module: {0}'               ) + [System.Environment]::NewLine +
+                    $('    Function: {1}, line: {2}'  ) + [System.Environment]::NewLine +
+                    $('    Error Message: {3}'        ) + [System.Environment]::NewLine +
+                    $('    Error Source: {4}'         ) + [System.Environment]::NewLine +
+                    $('    Stack Trace: {5}'          ) + [System.Environment]::NewLine +
+                    $('    PowerShell: {6} {7} on {8}')
 
-    $msg.Add( $('Unhandled Exception Error:') )
-    $msg.Add( [System.Environment]::NewLine )
-    $msg.Add( $('    Error Message: {0}'        -f $ErrorObject.Exception.Message) )
-    $msg.Add( [System.Environment]::NewLine )
-    $msg.Add( $('    Function: {0}, line: {1}.' -f $FunctionName, $ErrorObject.InvocationInfo.ScriptLineNumber) )
-    $msg.Add( [System.Environment]::NewLine )
-    $msg.Add( $('    Module:  {0}'              -f $PS_MODULE_NAME) )
-    $msg.Add( [System.Environment]::NewLine )
-    $msg.Add( $('    Module:  {0}'              -f $_.ScriptStackTrace) )
+    $functionName = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'Command'
+    $msg = $errorMessage -f $PS_MODULE_NAME,
+                            $functionName,
+                            $ErrorObject.InvocationInfo.ScriptLineNumber,
+                            $ErrorObject.Exception.Message,
+                            $ErrorObject.InvocationInfo.Statement.ToString(),
+                            $ErrorObject.ScriptStackTrace,
+                            $PSVersionTable.PSVersion.ToString(),
+                            $PSVersionTable.PSEdition,
+                            $PSVersionTable.Platform
 
-    Write-Host ( $msg -join '' ) -ForegroundColor Red
+    Write-Host $msg -ForegroundColor Red
 
 }

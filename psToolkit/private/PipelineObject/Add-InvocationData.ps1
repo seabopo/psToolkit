@@ -28,17 +28,19 @@ Function Add-InvocationData {
           # Get the caller's invocation information.
             $InvocationInfo = $callStack[1].InvocationInfo
 
+          # Get the caller predecessor's invocation information.
+            $predecessorName = if ( $callStack[2] ) { $callStack[2].InvocationInfo.InvocationName } else { '' }
+
           # Build the invocation object.
             $Invocation = @{
 
                 ID                          = '{0}::{1}::{2}' -f $InvocationInfo.InvocationName,
-                                                                 $predecessorInvokedFrom,
+                                                                 $predecessorName,
                                                                  [Guid]::NewGuid()
                 CallName                    = $InvocationInfo.InvocationName
                 CommandName                 = $InvocationInfo.MyCommand.Name
                 Time                        = $((Get-Date).ToString('yyyy-MM-dd:HH-mm-ss-fff'))
-                InvokedFromPath             = if ( $callStack[2] ) { $callStack[2].ToString() } else { '' }
-                InvokedFromName             = if ( $callStack[2] ) { $callStack[2].Location   } else { '' }
+                InvokedFromName             = $predecessorName
 
                 CallStack                   = $callStack
                 Command                     = $InvocationInfo.MyCommand
@@ -82,7 +84,7 @@ Function Add-InvocationData {
         }
         catch {
 
-          Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
+          Write-ExceptionMessage -e $_
 
       }
 

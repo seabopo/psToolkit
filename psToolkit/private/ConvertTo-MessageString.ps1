@@ -36,6 +36,14 @@ Function ConvertTo-MessageString {
                           'Int32', 'Int64', 'Double','Single','Decimal',
                           'Boolean', 'DateTime', 'TimeSpan', 'Guid')
 
+        $errorMessage = $( 'Unhandled Exception Error:'   ) + [System.Environment]::NewLine +
+                        $('    Module: {0}'               ) + [System.Environment]::NewLine +
+                        $('    Function: {1}, line: {2}'  ) + [System.Environment]::NewLine +
+                        $('    Error Message: {3}'        ) + [System.Environment]::NewLine +
+                        $('    Error Source: {4}'         ) + [System.Environment]::NewLine +
+                        $('    Stack Trace: {5}'          ) + [System.Environment]::NewLine +
+                        $('    PowerShell: {6} {7} on {8}')
+
     }
 
     process {
@@ -44,7 +52,22 @@ Function ConvertTo-MessageString {
 
             $compress = ( $CompressJSON ) ? @{ Compress = $true } : @{ }
 
-            if ( $Object.GetType().Name -in $simpleTypes ) {
+            if ( $Object.GetType().Name -eq 'ErrorRecord' ) {
+
+                $functionName = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'Command'
+                $multiLineReturnValue = $false
+                $returnValue = $errorMessage -f $PS_MODULE_NAME,
+                                                $functionName,
+                                                $Object.InvocationInfo.ScriptLineNumber,
+                                                $Object.Exception.Message,
+                                                $Object.InvocationInfo.Statement.ToString(),
+                                                $Object.ScriptStackTrace,
+                                                $PSVersionTable.PSVersion.ToString(),
+                                                $PSVersionTable.PSEdition,
+                                                $PSVersionTable.Platform
+
+            }
+            elseif ( $Object.GetType().Name -in $simpleTypes ) {
 
                 $multiLineReturnValue = $false
                 $returnValue = [System.Convert]::ToString($Object)
@@ -78,7 +101,7 @@ Function ConvertTo-MessageString {
         }
         catch {
 
-            Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
+            Write-ExceptionMessage -e $_
 
         }
 

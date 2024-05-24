@@ -29,7 +29,7 @@ Function Add-CommonParameterKeys {
         }
         catch {
 
-            Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
+            Write-ExceptionMessage -e $_
 
         }
 

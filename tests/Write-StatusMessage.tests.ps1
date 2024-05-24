@@ -131,6 +131,18 @@
     $env:PS_STATUSMESSAGE_LABELS     = $false
     $env:PS_STATUSMESSAGE_TIMESTAMPS = $false
 
+#==================================================================================================================
+# Run Exeption Error Tests
+#==================================================================================================================
+
+    Write-Msg -h -m " Auto-Generated Error Message Examples" -bb -ds -cb
+
+    try {
+        write-host ('test:{0}{3}' -f 'red','green')
+    }
+    catch {
+        Write-Msg -x -m "custom error message`r`n" -do $_
+    }
 
 #==================================================================================================================
 # Run Debug Object Tests

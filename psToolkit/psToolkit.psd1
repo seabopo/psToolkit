@@ -33,13 +33,13 @@
   Description = 'Pipeline and console message utility functions.'
 
 # Minimum version of the PowerShell engine required by this module
-  PowerShellVersion = '7.4.0'
+  PowerShellVersion = '7.3.0'
 
 # Name of the PowerShell host required by this module
 # PowerShellHostName = ''
 
 # Minimum version of the PowerShell host required by this module
-  PowerShellHostVersion = '7.4.0'
+  PowerShellHostVersion = '7.3.0'
 
 # Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
 # DotNetFrameworkVersion = ''

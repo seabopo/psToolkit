@@ -32,7 +32,7 @@ Function Test-IsNull {
         }
         catch {
 
-            Write-ExceptionMessage -e $_ -n $MyInvocation.InvocationName
+            Write-ExceptionMessage -e $_
 
         }
 
