@@ -255,8 +255,6 @@
 
     Write-Msg -h -m " Debug Object Examples" -bb -ds  -ps -cb
 
-    Write-Msg -p -m " Full Paramater Names Tests" -b -ds -ps
-
     Write-Msg -i -ds -m 'Debug Object: ' -o $testString
     Write-Msg -i -ds -m 'Debug Object: ' -o $testInt
     Write-Msg -i -ds -m 'Debug Object: ' -o $testBool
@@ -266,6 +264,3 @@
     Write-Msg -i -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 5
 
     Write-Msg -i -il 3 -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 30
-
-    Write-Msg -i -il 3 -ds -m 'Debug Object: ' -do $complexObject -MaxRecursionDepth 30
-

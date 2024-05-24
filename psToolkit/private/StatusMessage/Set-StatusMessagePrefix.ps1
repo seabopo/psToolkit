@@ -18,25 +18,26 @@ function Set-StatusMessagePrefix {
 
         try {
 
-            $prefix = New-Object System.Collections.Generic.List[System.String]
+            $prefixes = New-Object System.Collections.Generic.List[System.String]
 
             if ( $MessageObject.TimeStamps ) {
-                $prefix.Add( '{0} ' -f $((Get-Date).ToString('yyyy-MM-dd HH:mm:ss')) )
+                $prefixes.Add( '{0} ' -f $((Get-Date).ToString('yyyy-MM-dd HH:mm:ss')) )
             }
 
             if ( $MessageObject.Labels -and $MessageObject.Type -in $labelTypes ) {
-                $prefix.Add( '{0}: ' -f $MessageObject.Type.ToUpper() )
+                $prefixes.Add( '{0}: ' -f $MessageObject.Type.ToUpper() )
             }
 
             if ( $MessageObject.IndentationLevel -gt 0 ) {
-                $prefix.Add( '{0} ' -f ($MessageObject.IndentationString * $MessageObject.IndentationLevel) )
+                $prefixes.Add( '{0} ' -f ($MessageObject.IndentationString * $MessageObject.IndentationLevel) )
             }
 
-            $MessageObject.MessagePrefix = $prefix -join ''
+            $prefix = $prefixes -join ''
 
-            if ( $null -ne $MessageObject.MessagePrefix ) {
-                $MessageObject.MessageObjectPrefix = $MessageObject.MessagePrefix.Trim() +
-                $MessageObject.IndentationString + ' '
+            if ( -not [string]::IsNullOrEmpty($prefix ) ) {
+                $MessageObject.MessagePrefix = $prefix
+                $MessageObject.DebugObjectPrefix = $prefix.Substring(0,$prefix.length -1) +
+                                                   $MessageObject.IndentationString + ' '
             }
 
             Write-Output $MessageObject
