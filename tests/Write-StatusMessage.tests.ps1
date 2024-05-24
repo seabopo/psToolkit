@@ -135,13 +135,13 @@
 # Run Exeption Error Tests
 #==================================================================================================================
 
-    Write-Msg -h -m " Auto-Generated Error Message Examples" -bb -ds -cb
+    Write-Msg -h -m " Auto-Generated Error Message Examples" -bb -ds -ps -cb
 
     try {
         write-host ('test:{0}{3}' -f 'red','green')
     }
     catch {
-        Write-Msg -x -m "custom error message`r`n" -do $_
+        Write-Msg -x -m "custom error message`r`n" -o $_
     }
 
 #==================================================================================================================
@@ -257,13 +257,13 @@
 
     Write-Msg -p -m " Full Paramater Names Tests" -b -ds -ps
 
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testString
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testInt
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testBool
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testArray
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testObject
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $testHashTable
-    Write-Msg -i -ds -m 'Debug Object: ' -DebugObject $complexObject -MaxRecursionDepth 5
+    Write-Msg -i -ds -m 'Debug Object: ' -o $testString
+    Write-Msg -i -ds -m 'Debug Object: ' -o $testInt
+    Write-Msg -i -ds -m 'Debug Object: ' -o $testBool
+    Write-Msg -i -ds -m 'Debug Object: ' -o $testArray
+    Write-Msg -i -ds -m 'Debug Object: ' -o $testObject
+    Write-Msg -i -ds -m 'Debug Object: ' -o $testHashTable
+    Write-Msg -i -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 5
 
-    Write-Msg -i -il 3 -ds -m 'Debug Object: ' -do $complexObject -MaxRecursionDepth 30
+    Write-Msg -i -il 3 -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 30
 

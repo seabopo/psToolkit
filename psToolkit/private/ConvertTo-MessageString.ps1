@@ -36,14 +36,6 @@ Function ConvertTo-MessageString {
                           'Int32', 'Int64', 'Double','Single','Decimal',
                           'Boolean', 'DateTime', 'TimeSpan', 'Guid')
 
-        $errorMessage = $( 'Unhandled Exception Error:'   ) + [System.Environment]::NewLine +
-                        $('    Module: {0}'               ) + [System.Environment]::NewLine +
-                        $('    Function: {1}, line: {2}'  ) + [System.Environment]::NewLine +
-                        $('    Error Message: {3}'        ) + [System.Environment]::NewLine +
-                        $('    Code Statement: {4}'       ) + [System.Environment]::NewLine +
-                        $('    Stack Trace: {5}'          ) + [System.Environment]::NewLine +
-                        $('    PowerShell: {6} {7} on {8}')
-
     }
 
     process {
@@ -52,23 +44,7 @@ Function ConvertTo-MessageString {
 
             $compress = ( $CompressJSON ) ? @{ Compress = $true } : @{ }
 
-            if ( $Object.GetType().Name -eq 'ErrorRecord' ) {
-
-                $functionName = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'Command'
-                $statement = $Object.InvocationInfo.Statement ?? $Object.InvocationInfo.Line ?? '<Not available>'
-                $multiLineReturnValue = $false
-                $returnValue = $errorMessage -f $PS_MODULE_NAME,
-                                                $functionName,
-                                                $Object.InvocationInfo.ScriptLineNumber,
-                                                $Object.Exception.Message,
-                                                $($statement.ToString().Trim()),
-                                                $Object.ScriptStackTrace,
-                                                $PSVersionTable.PSVersion.ToString(),
-                                                $PSVersionTable.PSEdition,
-                                                $PSVersionTable.Platform
-
-            }
-            elseif ( $Object.GetType().Name -in $simpleTypes ) {
+            if ( $Object.GetType().Name -in $simpleTypes ) {
 
                 $multiLineReturnValue = $false
                 $returnValue = [System.Convert]::ToString($Object)
