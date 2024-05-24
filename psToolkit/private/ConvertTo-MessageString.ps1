@@ -40,7 +40,7 @@ Function ConvertTo-MessageString {
                         $('    Module: {0}'               ) + [System.Environment]::NewLine +
                         $('    Function: {1}, line: {2}'  ) + [System.Environment]::NewLine +
                         $('    Error Message: {3}'        ) + [System.Environment]::NewLine +
-                        $('    Error Source: {4}'         ) + [System.Environment]::NewLine +
+                        $('    Code Statement: {4}'       ) + [System.Environment]::NewLine +
                         $('    Stack Trace: {5}'          ) + [System.Environment]::NewLine +
                         $('    PowerShell: {6} {7} on {8}')
 
