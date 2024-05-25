@@ -43,14 +43,20 @@ Function Initialize-PipelineObject {
 
     .PARAMETER LogInvocation
         OPTIONAL. Switch. Alias: -l, -log. Logs the function call and any parameters passed to the function.
+        This value can be set using an environment variable.
+            Example: $env:PS_PIPELINEOBJECT_LOGGING = $true
 
     .PARAMETER DontLogParameters
         OPTIONAL. Switch. Alias: -p, -dlp. Skips the logging of all parameters passed to the function so only the
         function call is logged.
+        This value can be set using an environment variable.
+            Example: $env:PS_PIPELINEOBJECT_DONTLOGPARAMS = $true
 
     .PARAMETER LogPipelineObjectValues
         OPTIONAL. Switch. Alias: -o, -lpo. Include the PipeLineObject in the parameter logs. This object is
         skipped by default.
+        This value can be set using an environment variable.
+            Example: $env:PS_PIPELINEOBJECT_LOGVALUES = $true
 
     .PARAMETER IgnoreParameterNames
         OPTIONAL. String Array. Alias: -g, -ipn. Skips logging any parameters whose name is in the defined array.
@@ -63,6 +69,8 @@ Function Initialize-PipelineObject {
     .PARAMETER IncludeCommonParameters
         OPTIONAL. Switch. Alias: -i, -icp. Determines if the commom powershell paramaters should be included
         in the pipeline object. This also requires that [CmdletBinding()] is defined in teh calling function.
+        This value can be set using an environment variable.
+            Example: $env:PS_PIPELINEOBJECT_INCLUDECOMMONPARAMS = $true
 
     .EXAMPLE
         The following code:
@@ -96,16 +104,15 @@ Function Initialize-PipelineObject {
     [OutputType([hashtable])]
     [OutputType([hashtable],[String])]
     param (
-        [Parameter(ValueFromPipeline)]  [Hashtable] $PipelineObject = @{},
         [Parameter()][Alias('t')]       [Hashtable] $Tests,
         [Parameter()][Alias('r','rii')] [Switch]    $ReturnInvocationID,
         [Parameter()][Alias('l','log')] [Switch]    $LogInvocation,
         [Parameter()][Alias('p','dlp')] [Switch]    $DontLogParameters,
         [Parameter()][Alias('o','lpo')] [Switch]    $LogPipelineObjectValues,
-
         [Parameter()][Alias('i','icp')] [Switch]    $IncludeCommonParameters,
-        [Parameter()][Alias('g','ipn')] [String[]]  $IgnoreParameterNames = ( $env:PS_STATUSMESSAGE_IGNORE_PARAMS_JSON |
-                                                                              ConvertFrom-JSON )
+        [Parameter()][Alias('g','ipn')] [String[]]  $IgnoreParameterNames,
+
+        [Parameter(ValueFromPipeline)] [ValidateNotNull()] [Hashtable] $PipelineObject = @{}
     )
 
     process {

@@ -10,29 +10,76 @@ function Write-StatusMessage {
         REQUIRED. String. Alias: -m. The message to be written to the console.
 
     .PARAMETER Type
-        OPTIONAL. String. Alias: -t. The type of message to write. The type determines the color and the label.
-        Default value: 'Information'.
-                  Valid Types:
-                    - Header      :: Color = Magenta
-                    - Process     :: Color = Cyan
-                    - Information :: Color = Gray
-                    - Success     :: Color = Green
-                    - Failure     :: Color = Red
-                    - Error       :: Color = Red
-                    - Warning     :: Color = Yellow
-                    - Exception   :: Color = Red (also writes the last exception error message)
+        OPTIONAL. String. Alias: -t. The type of message to write. Default value: 'Action'.
 
-        The type of message can also be set using the following switches:
-            -Header, -Process, -Info, -Success, -Warning, -Failure, -Err -ExceptionError
+        The type determines several properties of the output, including the color, label and when the messages
+        are supressed. The type of message can also be set using the following switches: -Header, -Process,
+        -Action, -Information, Dbg, -Success, -Warning, -Failure, -Err -ExceptionError
+
+        Message types of Header, Process, Information, and Debug are by default considered verbose and are only
+        shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES is set to true. This list can be modified by updating
+        the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS environment variable. The value of this variable should be a
+        JSON array of strings since environment variables can only store strings.
+        Examples:
+            $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES  = $true
+            $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS = '["Header","Process","Debug","Information"]'
+
+        By default, all messages are written using the Write-Host function. Writing to the other PowerShell
+        output streams can be enabled by setting the PS_STATUSMESSAGE_USE_ALL_OUTPUT_STREAMS environment variable
+        to true. The message types and associated streams are show in the table below.
+
+            Type          Msg Color    Msg Header   Verbose  PS Write Function
+            ------------  -----------  -----------  -------  -----------------
+            Header        Magenta      -none-       Yes      Write-Verbose
+            Process       Cyan         -none-       Yes      Write-Verbose
+            Action        White        -none-       No       Write-host
+            Information   DarkGray     -none-       Yes      Write-Verbose
+            Debug         DarkGray     DEBUG        Yes      Write-Debug
+            Success       DarkGreen    SUCCESS      No       Write-host
+            Warning       DarkYellow   WARNING      No       Write-Warning
+            Failure       DarkRed      FAILURE      No       Write-Error
+            Error         Red          ERROR        No       Write-Error
+            Exception     Red          EXCEPTION    No       Write-Error
+
+            PowerShell Write-Functions:
+                Write-Host     :: Write-Host streams are always written.
+                Write-Output   :: not used for display by this function.
+                Write-Warning  :: Controlled by $WarningPreference.
+                Write-Error    :: Controlled by
+                Write-Debug    :: Controlled by $DebugPreference: SilentlyContinue (hidden) or Continue (shown).
+                Write-Verbose  :: Controlled by $VerbosePreference: SilentlyContinue (hidden) or Continue (shown).
+
+                The Write-Functions use the standard user preference variables values to determin if the message
+                should be displayed. Setting the preference to SilentlyContinue will hide the messages and
+                setting the preference to Continue will show the messages.
 
     .PARAMETER Header
         OPTIONAL. Switch. Alias: -h. Switch alternative for the Header Type paramater. Message Color: Magenta.
+        Header messages are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES environment variable is
+        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS environment
+        variable.
 
     .PARAMETER Process
         OPTIONAL. Switch. Alias: -p. Switch alternative for the Process Type paramater. Message Color: Cyan.
+        Process messages are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES environment variable is
+        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS environment
+        variable.
+
+    .PARAMETER Action
+        OPTIONAL. Switch. Alias: -a. Switch alternative for the Action Type paramater. Message Color: Gray.
+        Action is the default message type if no type is specified. Action messages are always shown.
 
     .PARAMETER Information
-        OPTIONAL. Switch. Alias: -i. Switch alternative for the Information Type paramater. Message Color: Gray.
+        OPTIONAL. Switch. Alias: -i. Switch alternative for the Information Type paramater. Message Color: DarkGray.
+        Information messages are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES environment variable is
+        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS environment
+        variable.
+
+    .PARAMETER Dgb
+        OPTIONAL. Switch. Alias: -d. Switch alternative for the Debug Type paramater. Message Color: DarkGray.
+        Debug messages are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES environment variable is
+        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS environment
+        variable.
 
     .PARAMETER Success
         OPTIONAL. Switch. Alias: -s. Switch alternative for the Success Type paramater. Message Color: Green.
@@ -58,10 +105,13 @@ function Write-StatusMessage {
 
     .PARAMETER Labels
         OPTIONAL. Switch. Alias: -l. Prefixes each message with the message type.
-        Labels: SUCCESS, FAILURE, WARNING, ERROR, EXCEPTION.
-        Messages with the Header, Process, and Information types will not have labels.
+        Labels: DEBUG, SUCCESS, FAILURE, WARNING, ERROR, EXCEPTION.
+        Messages with the Header, Process, and Information types will not have labels by default.
         This value can be set using an environment variable.
             Example: $env:PS_STATUSMESSAGE_LABELS = $true
+        The Types of messages that use labels can also be set using an environment variable.
+            Example: $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES = '["Debug","Success","Warning","Failure",...]'
+        You must specify the array in JSON format since environment variables can only store strings.
 
     .PARAMETER IndentationLevel
         OPTIONAL. Integer. Alias: -il. Indents the message using the string specified by the IndentationString
@@ -98,7 +148,7 @@ function Write-StatusMessage {
             Example: $env:PS_STATUSMESSAGE_BANNER_LENGTH = 80
 
     .PARAMETER ColorBanners
-        OPTIONAL. Switch. Alias: -cb. Colors the banners to match the message type. Default value: $false.
+        OPTIONAL. Switch. Alias: -cb. Colors the banners to match the message type. Default value: $true.
         This value can be set using an environment variable.
             Example: $env:PS_STATUSMESSAGE_COLOR_BANNERS = $true
 
@@ -141,7 +191,7 @@ function Write-StatusMessage {
         [Alias('m')]  [string]         $Message,
 
         [Parameter(ParameterSetName = "byTypeName")]
-        [ValidateSet('Header','Process','Information','Success','Warning','Failure','Error','Exception')]
+        [ValidateSet('Header','Process','Action','Information','Debug','Success','Warning','Failure','Error','Exception')]
         [Alias('t')]  [String]         $Type,
 
         [Parameter(ParameterSetName = "isHeader")]
@@ -150,8 +200,14 @@ function Write-StatusMessage {
         [Parameter(ParameterSetName = "isProcess")]
         [Alias('p')]  [Switch]         $Process,
 
+        [Parameter(ParameterSetName = "isAction")]
+        [Alias('a')]  [Switch]         $Action,
+
         [Parameter(ParameterSetName = "isInformation")]
         [Alias('i')]  [Switch]         $Information,
+
+        [Parameter(ParameterSetName = "isDebug")]
+        [Alias('d')]  [Switch]         $Dbg,
 
         [Parameter(ParameterSetName = "isSuccess")]
         [Alias('s')]  [Switch]         $Success,
@@ -199,15 +255,23 @@ function Write-StatusMessage {
                         {
                             'isHeader'      { 'Header'      }
                             'isProcess'     { 'Process'     }
+                            'isAction'      { 'Action'      }
                             'isInformation' { 'Information' }
+                            'isDebug'       { 'Debug'       }
                             'isSuccess'     { 'Success'     }
                             'isWarning'     { 'Warning'     }
                             'isFailure'     { 'Failure'     }
                             'isError'       { 'Error'       }
                             'isException'   { 'Exception'   }
+                            default         { 'Action'      }
                         }
 
             }
+
+          # Determine if the message should be suppressed and exit if true.
+            if ( ( [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES) -eq $false ) -and
+                 ( $Type -in $($env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES | ConvertFrom-JSON ) ) )
+            { return }
 
           # Create a PipelineObject to pass through the rest of the functions. Messages are written a lot so do this
           # manually rather than using the Initialize-PipelineObject function to keep it as performant as possible.
@@ -216,6 +280,7 @@ function Write-StatusMessage {
                 Type               = $Type
                 TimeStamps         = $TimeStamps.ToBool()
                 Labels             = $Labels.ToBool()
+                LabelTypes         = $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES | ConvertFrom-JSON
                 IndentationLevel   = $IndentationLevel
                 IndentationString  = $IndentationString
                 Banner             = $Banner.ToBool()

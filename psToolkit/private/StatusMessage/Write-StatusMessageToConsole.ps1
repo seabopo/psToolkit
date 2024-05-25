@@ -8,17 +8,12 @@ function Write-StatusMessageToConsole {
     [CmdletBinding()]
     param ( [Parameter(Mandatory,ValueFromPipeline)] [HashTable] $MessageObject )
 
-    begin {
-
-        $bannerColor = @{ ForegroundColor = 'White' }
-
-    }
-
     process {
 
         try {
 
-            if ( $MessageObject.ColorBanners ) { $bannerColor = @{ForegroundColor=$MessageObject.MessageColor} }
+            $bannerColor = ( $MessageObject.ColorBanners ) ? @{ ForegroundColor = $MessageObject.MessageColor } :
+                                                             @{ ForegroundColor = 'White' }
 
             if ( $MessageObject.PreSpace ) { Write-Host '' }
 

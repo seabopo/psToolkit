@@ -14,15 +14,17 @@ function Set-StatusMessageColor {
 
             $MessageObject.MessageColor = switch ( $MessageObject.Type )
                                         {
-                                            "Process"     { "Cyan"    }
-                                            "Header"      { "Magenta" }
-                                            "Information" { "Gray"    }
-                                            "Success"     { "Green"   }
-                                            "Warning"     { "Yellow"  }
-                                            "Failure"     { "Red"     }
-                                            "Error"       { "Red"     }
-                                            "Exception"   { "Red"     }
-                                            default       { "Gray"    }
+                                            "Header"      { "Magenta"    }
+                                            "Process"     { "Cyan"       }
+                                            "Action"      { "Gray"       }
+                                            "Information" { "DarkGray"   }
+                                            "Debug"       { "DarkGray"   }
+                                            "Success"     { "DarkGreen"  }
+                                            "Warning"     { "DarkYellow" }
+                                            "Failure"     { "DarkRed"    }
+                                            "Error"       { "Red"        }
+                                            "Exception"   { "Red"        }
+                                            default       { "Gray"       }
                                         }
 
             Write-Output $MessageObject
@@ -36,3 +38,6 @@ function Set-StatusMessageColor {
 
     }
 }
+
+# write-host 'Some Test Text in DarkBlue   ' -ForegroundColor DarkBlue
+# write-host 'Some Test Text in White      ' -ForegroundColor White

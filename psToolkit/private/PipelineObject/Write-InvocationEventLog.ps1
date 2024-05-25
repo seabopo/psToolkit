@@ -23,7 +23,7 @@ Function Write-InvocationEventLog {
                 $msg.Add( $(' called from {0}' -f $i.InvokedFromName) )
                 $msg.Add( $(' at {0}' -f $i.Time) )
 
-                Write-Msg -h -m $( $msg -join '' )
+                Write-Msg -p -m $( $msg -join '' )
 
             }
 

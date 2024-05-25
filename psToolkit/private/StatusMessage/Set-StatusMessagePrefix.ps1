@@ -8,12 +8,6 @@ function Set-StatusMessagePrefix {
     [CmdletBinding()]
     param ( [Parameter(Mandatory,ValueFromPipeline)] [HashTable] $MessageObject )
 
-    begin {
-
-        $labelTypes = @( 'Success', 'Warning', 'Failure', 'Error', 'Exception' )
-
-    }
-
     process {
 
         try {
@@ -24,7 +18,7 @@ function Set-StatusMessagePrefix {
                 $prefixes.Add( '{0} ' -f $((Get-Date).ToString('yyyy-MM-dd HH:mm:ss')) )
             }
 
-            if ( $MessageObject.Labels -and $MessageObject.Type -in $labelTypes ) {
+            if ( $MessageObject.Labels -and ( $MessageObject.Type -in $MessageObject.LabelTypes) ) {
                 $prefixes.Add( '{0}: ' -f $MessageObject.Type.ToUpper() )
             }
 

@@ -10,10 +10,6 @@ Function Test-Parameters {
     [CmdletBinding()]
     param ( [Parameter(Mandatory,ValueFromPipeline)] [Hashtable] $PipelineObject )
 
-    begin {
-        $validTestNames = @('AnyIsNull','AllAreNull')
-    }
-
     process {
 
         try {
@@ -30,7 +26,7 @@ Function Test-Parameters {
 
                     $testName = $_
 
-                    if ( $validTestNames -contains $testName ) {
+                    if ( @('AnyIsNull','AllAreNull') -contains $testName ) {
 
                         $params        = @{}
                         $missingParams = @()
