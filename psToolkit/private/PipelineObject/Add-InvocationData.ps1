@@ -13,10 +13,16 @@ Function Add-InvocationData {
 
       try {
 
-        # If the 'Invocation' key does not exist, create it and it's ID sub-key.
+        # If the 'Invocation' key does not exist initialize the object.
           if ( -not $PipelineObject.ContainsKey('_Invocation') ) {
               $PipelineObject.Add('_Invocation',@{})
               $PipelineObject._Invocation.Add('ID',$null)
+              $PipelineObject.Success = $true
+              $PipelineObject.ResultMessage = 'PipelineObject initialized.'
+          }
+          else {
+              $PipelineObject.Success = $true
+              $PipelineObject.ResultMessage = 'PipelineObject updated.'
           }
 
         # Get the callstack for the entrypoint, the entrypoint caller and the caller's predecessor.
@@ -54,18 +60,18 @@ Function Add-InvocationData {
                                                                [Guid]::NewGuid()
               CallName                    = $InvocationInfo.InvocationName
               CommandName                 = $InvocationInfo.MyCommand.Name
+              ModuleName                  = $InvocationInfo.MyCommand.ModuleName
               Time                        = $((Get-Date).ToString('yyyy-MM-dd:HH-mm-ss-fff'))
               InvokedFromName             = $predecessorName
 
-              CallStack                   = $callStack
+
               Command                     = $InvocationInfo.MyCommand
               AllParameters               = $InvocationInfo.MyCommand.Parameters
               BoundParameters             = $InvocationInfo.BoundParameters
               DefinedParameters           = $InvocationInfo.MyCommand.ScriptBlock.Ast.Body.ParamBlock.Parameters
-
               PipelineObjectParameterName = $null
 
-              ParameterTests              = @{ Defined = $false; Successful = $true; Errors = @() }
+              Tests                       = @{ Defined = $false; Successful = $true; Errors = @() }
 
               PowerShellVersion           = $PSVersionTable.PSVersion
               PowerShellEdition           = $PSVersionTable.PSEdition
@@ -77,11 +83,17 @@ Function Add-InvocationData {
                                                 @{ $_.InterfaceAlias = $_.IPAddress }
                                              }
 
+              CallStack                   = $callStack
+
               LogInvocation               = $LogInvocation
               DontLogParameters           = $DontLogParameters
               LogPipelineObjectValues     = $LogPipelineObjectValues
               IncludeCommonParameters     = $IncludeCommonParameters
               IgnoreParameterNames        = $IgnoreParameterNames
+
+              EntryPointPosition          = $callStack[1].ToString()
+              EntryPointLineNumber        = $callStack[1].Position.StartLineNumber
+              EntryPointStatement         = $callStack[1].Position.Text
 
           }
 

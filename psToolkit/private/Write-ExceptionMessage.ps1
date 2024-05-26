@@ -16,21 +16,29 @@ Function Write-ExceptionMessage {
         [Parameter()] [String] [Alias('n')] $FunctionName
     )
 
-    $errorMessage = $( 'Unhandled Exception Error:'   ) + [System.Environment]::NewLine +
+    $errorMessage = $( 'Exception Error:'             ) + [System.Environment]::NewLine +
                     $('    Module: {0}'               ) + [System.Environment]::NewLine +
                     $('    Function: {1}, line: {2}'  ) + [System.Environment]::NewLine +
                     $('    Error Message: {3}'        ) + [System.Environment]::NewLine +
-                    $('    Error Source: {4}'         ) + [System.Environment]::NewLine +
+                    $('    Code Statement: {4}'       ) + [System.Environment]::NewLine +
                     $('    Stack Trace: {5}'          ) + [System.Environment]::NewLine +
                     $('    PowerShell: {6} {7} on {8}')
+
+    $statement = $MessageObject.DebugObject.InvocationInfo.Statement ??
+                 $MessageObject.DebugObject.InvocationInfo.Line ??
+                 '<Not available>'
+
+    $stack = $MessageObject.DebugObject.ScriptStackTrace -split [System.Environment]::NewLine
+    $stack = $stack -join ([System.Environment]::NewLine + '        ')
+    $stack = [System.Environment]::NewLine + '        ' + $stack
 
     $functionName = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'Command'
     $msg = $errorMessage -f $PS_MODULE_NAME,
                             $functionName,
                             $ErrorObject.InvocationInfo.ScriptLineNumber,
                             $ErrorObject.Exception.Message,
-                            $ErrorObject.InvocationInfo.Statement.ToString(),
-                            $ErrorObject.ScriptStackTrace,
+                            $($statement.ToString().Trim()),
+                            $stack,
                             $PSVersionTable.PSVersion.ToString(),
                             $PSVersionTable.PSEdition,
                             $PSVersionTable.Platform

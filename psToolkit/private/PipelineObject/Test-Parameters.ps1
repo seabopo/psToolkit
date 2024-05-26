@@ -14,23 +14,28 @@ Function Test-Parameters {
 
         try {
 
+          # Get the current invocation object.
             $i = $PipelineObject._Invocation[$PipelineObject._Invocation.ID]
 
+          # Check the entrypoint for the Tests parameter.
             if ( $i.CallStack[0].InvocationInfo.BoundParameters.ContainsKey('Tests') ) {
 
-                $i.ParameterTests.Defined = $true
-
+              # If it exists get the tests.
+                $i.Tests.Defined = $true
                 $tests = $i.CallStack[0].InvocationInfo.BoundParameters['Tests']
 
+              # Loop through each type of test.
                 $tests.keys | ForEach-Object {
 
                     $testName = $_
 
+                  # Check if the test name is valid.
                     if ( @('AnyIsNull','AllAreNull') -contains $testName ) {
 
                         $params        = @{}
                         $missingParams = @()
 
+                      # Check each test parameter and make sure they have been added to the PipelineObject.
                         $tests[$testName] | ForEach-Object {
                             $paramName = $_
                             if ( $PipelineObject.ContainsKey($paramName) ) {
@@ -39,29 +44,34 @@ Function Test-Parameters {
                             else { $missingParams += $paramName }
                         }
 
+                      # If all parameters are present, perform the test.
                         if ( $params.count -eq $tests[$testName].count ) {
                             $validationFailed, $failedValues = Test-IsNull -n $testName -v $params -r
                             if ( $validationFailed ) {
-                                $i.ParameterTests.Successful = $false
-                                $i.ParameterTests.Errors += $(
-                                    '{0} test failed becasue the these values are null: ' -f
-                                    $testName, $($failedValues -Join ','))
+                                $i.Tests.Successful = $false
+                                $i.Tests.Errors += $( '{0} test failed becasue these values are null: {1}' -f
+                                                      $testName, $($failedValues -Join ','))
                             }
                         }
                         else {
-                            $i.ParameterTests.Successful = $false
-                            $i.ParameterTests.Errors += $(
-                                '{0} test failed. PipelineObject is missing the following Parameter value(s): {1}' -f
+                            $i.Tests.Successful = $false
+                            $i.Tests.Errors += $(
+                                '{0} test failed. PipelineObject is missing the following Parameter(s): {1}' -f
                                 $testName, $($missingParams -Join ','))
                         }
 
                     }
                     else {
-                        $i.ParameterTests.Successful = $false
-                        $i.ParameterTests.Errors += $(
-                            'Tests failed. The following validation test name is not valid: {1}' -f $testName )
+                        $i.Tests.Successful = $false
+                        $i.Tests.Errors += $(
+                            'Tests failed. The following validation test name is not valid: {0}' -f $testName )
                     }
 
+                }
+
+                if ( -not $i.Tests.Successful ) {
+                    $PipelineObject.Success = $false
+                    $PipelineObject.ResultMessage = $i.Tests.Errors -join ". "
                 }
 
             }

@@ -20,10 +20,10 @@ Function Write-InvocationEventLogParameters {
 
                 $msg = New-Object System.Collections.Generic.List[System.String]
 
-                $msg.Add( $('{0} Bound Parameters:' -f $indent) )
+                $msg.Add( $('{0} Bound Parameters: ' -f $indent) )
 
                 if ( $i.BoundParameters.Count -eq 0 ) {
-                    $msg.Add( $('{0} No Parameters passed.' -f ($indent * 2)) )
+                    $msg.Add( $('No Parameters passed.' ) )
                 }
                 else {
                     $i.BoundParameters.GetEnumerator() |
@@ -50,7 +50,7 @@ Function Write-InvocationEventLogParameters {
                         }
                 }
 
-                Write-Msg -i -m $($msg -join '')
+                Write-Msg -d -m $($msg -join '')
 
             }
 

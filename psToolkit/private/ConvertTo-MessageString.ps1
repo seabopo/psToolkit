@@ -34,7 +34,7 @@ Function ConvertTo-MessageString {
 
         $simpleTypes = @( 'String', 'Byte', 'Char',
                           'Int32', 'Int64', 'Double','Single','Decimal',
-                          'Boolean', 'DateTime', 'TimeSpan', 'Guid')
+                          'Boolean', 'DateTime', 'TimeSpan', 'Guid', 'SwitchParameter')
 
     }
 
@@ -44,13 +44,15 @@ Function ConvertTo-MessageString {
 
             $compress = ( $CompressJSON ) ? @{ Compress = $true } : @{ }
 
-            if ( $Object.GetType().Name -in $simpleTypes ) {
+            $typeName = $Object.GetType().Name
+
+            if ( $typeName -in $simpleTypes ) {
 
                 $multiLineReturnValue = $false
                 $returnValue = [System.Convert]::ToString($Object)
 
             }
-            elseif ( $Object.GetType().Name.EndsWith('[]') -or $Object.GetType().Name -eq 'ArrayList' ) {
+            elseif ( ( $typeName.EndsWith('[]') -and $typeName -ne 'Object[]' ) -or $typeName -eq 'ArrayList' ) {
 
                 $multiLineReturnValue = $false
                 $returnValue = (($Object | ConvertTo-JSON -Depth 0 -Compress) 3> $null )

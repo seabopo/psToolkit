@@ -253,17 +253,17 @@ function Write-StatusMessage {
 
                 $Type = switch ( $PSCmdlet.ParameterSetName )
                         {
-                            'isHeader'      { 'Header'      }
-                            'isProcess'     { 'Process'     }
-                            'isAction'      { 'Action'      }
-                            'isInformation' { 'Information' }
-                            'isDebug'       { 'Debug'       }
-                            'isSuccess'     { 'Success'     }
-                            'isWarning'     { 'Warning'     }
-                            'isFailure'     { 'Failure'     }
-                            'isError'       { 'Error'       }
-                            'isException'   { 'Exception'   }
-                            default         { 'Action'      }
+                            'isHeader'      { 'Header'      ; break }
+                            'isProcess'     { 'Process'     ; break }
+                            'isAction'      { 'Action'      ; break }
+                            'isInformation' { 'Information' ; break }
+                            'isDebug'       { 'Debug'       ; break }
+                            'isSuccess'     { 'Success'     ; break }
+                            'isWarning'     { 'Warning'     ; break }
+                            'isFailure'     { 'Failure'     ; break }
+                            'isError'       { 'Error'       ; break }
+                            'isException'   { 'Exception'   ; break }
+                            default         { 'Action'      ; break }
                         }
 
             }

@@ -14,17 +14,17 @@ function Set-StatusMessageColor {
 
             $MessageObject.MessageColor = switch ( $MessageObject.Type )
                                         {
-                                            "Header"      { "Magenta"    }
-                                            "Process"     { "Cyan"       }
-                                            "Action"      { "Gray"       }
-                                            "Information" { "DarkGray"   }
-                                            "Debug"       { "DarkGray"   }
-                                            "Success"     { "DarkGreen"  }
-                                            "Warning"     { "DarkYellow" }
-                                            "Failure"     { "DarkRed"    }
-                                            "Error"       { "Red"        }
-                                            "Exception"   { "Red"        }
-                                            default       { "Gray"       }
+                                            "Header"      { "Magenta"    ; break }
+                                            "Process"     { "Cyan"       ; break }
+                                            "Action"      { "Gray"       ; break }
+                                            "Information" { "DarkGray"   ; break }
+                                            "Debug"       { "DarkGray"   ; break }
+                                            "Success"     { "DarkGreen"  ; break }
+                                            "Warning"     { "DarkYellow" ; break }
+                                            "Failure"     { "DarkRed"    ; break }
+                                            "Error"       { "Red"        ; break }
+                                            "Exception"   { "Red"        ; break }
+                                            default       { "Gray"       ; break }
                                         }
 
             Write-Output $MessageObject

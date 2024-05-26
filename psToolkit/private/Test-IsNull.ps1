@@ -23,7 +23,7 @@ Function Test-IsNull {
                     }
 
             if ( $ReturnFailedKeys ) {
-                return $pass, $nullValues
+                return $pass, $failedkeys
             }
             else {
                 return $pass

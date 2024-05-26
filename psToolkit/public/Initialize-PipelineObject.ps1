@@ -130,6 +130,7 @@ Function Initialize-PipelineObject {
                 Remove-RecursiveInvocationObjects |
                 Write-InvocationEventLog |
                 Write-InvocationEventLogParameters |
+                Exit-Processing |
                 Out-Null
 
             Write-Output $PipelineObject
