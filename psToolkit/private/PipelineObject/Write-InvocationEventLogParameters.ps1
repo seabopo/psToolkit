@@ -38,7 +38,12 @@ Function Write-InvocationEventLogParameters {
                                 $msg.Add( $('[{0}]' -f $_.Value.GetType().Name) )
                             }
                             else {
-                                $value, $multiLine = ConvertTo-MessageString -o $_.Value -p ($indent * 3) -r -d 0
+                                if ( $null -eq $_.Value ) {
+                                    $value, $multiLine = ConvertTo-MessageString -o 'null' -p ($indent * 3) -r -d 0
+                                }
+                                else {
+                                    $value, $multiLine = ConvertTo-MessageString -o $_.Value -p ($indent * 3) -r -d 0
+                                }
                                 if ( $multiLine ) {
                                     $msg.Add( $('[{0}]' -f $_.Value.GetType().Name) )
                                     $msg.Add( $value )
@@ -46,7 +51,6 @@ Function Write-InvocationEventLogParameters {
                                 else {
                                     $msg.Add( $value )
                                 }
-                            }
                         }
                 }
 
